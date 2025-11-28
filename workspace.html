@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workspace - NovaKiwi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            position: relative;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .workspace-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            flex: 1;
+            height: calc(100vh - var(--header-height));
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .agent-status {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: var(--surface-color);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .pulse {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(142, 229, 63, 0.7);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(142, 229, 63, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(142, 229, 63, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(142, 229, 63, 0);
+            }
+        }
+
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 90%;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .avatar.agent {
+            background: var(--text-color);
+            color: white;
+        }
+
+        .avatar.user {
+            background: var(--surface-color);
+            color: var(--muted-text);
+        }
+
+        .message-content {
+            background: var(--surface-color);
+            padding: 12px 16px;
+            border-radius: 16px;
+            border-top-left-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: var(--text-color);
+            color: white;
+            border-radius: 16px;
+            border-top-right-radius: 4px;
+        }
+
+        .input-area {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        .chat-input-wrapper {
+            position: relative;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 100px;
+            font-family: var(--font-family);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--text-color);
+        }
+
+        .send-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        /* Main Preview Area */
+        .preview-area {
+            background: #e5e5e5;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .device-frame {
+            background: white;
+            width: 375px;
+            height: 812px;
+            border-radius: 40px;
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.2);
+            border: 12px solid #1a1a1a;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .preview-header {
+            position: absolute;
+            top: 1rem;
+            left: 2rem;
+            right: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .preview-controls {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 100px;
+            display: flex;
+            gap: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-btn {
+            border: none;
+            background: none;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .control-btn:hover,
+        .control-btn.active {
+            opacity: 1;
+        }
+
+        /* Loading State in Preview */
+        .building-state {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted-text);
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            opacity: 0.5;
+            margin-bottom: 8px;
+            transition: opacity 0.3s;
+        }
+
+        .step-item.active {
+            opacity: 1;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .step-item.done {
+            opacity: 0.8;
+            text-decoration: line-through;
+        }
+
+        .check {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-dot"></div>
+                NovaKiwi
+            </a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="font-size: 0.9rem; color: var(--muted-text);">Project: <strong
+                        style="color: var(--text-color);">Barber Booking App</strong></span>
+                <a href="deploy.html" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.9rem;">Deploy</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="workspace-container">
+        <aside class="sidebar">
+            <div class="agent-status">
+                <div class="status-indicator">
+                    <div class="pulse"></div>
+                    Agent is building...
+                </div>
+            </div>
+
+            <div class="chat-area" id="chatArea">
+                <div class="message">
+                    <div class="avatar agent">AI</div>
+                    <div class="message-content">
+                        I'm starting to build your barbershop booking app. I'll set up the database for appointments and
+                        create the customer view first.
+                    </div>
+                </div>
+                <!-- Dynamic messages will appear here -->
+            </div>
+
+            <div class="input-area">
+                <div class="chat-input-wrapper">
+                    <input type="text" class="chat-input" placeholder="Give feedback (e.g. 'Make the logo bigger')..."
+                        id="chatInput">
+                    <button class="send-btn" onclick="sendMessage()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="preview-area">
+            <div class="preview-header">
+                <div class="preview-controls">
+                    <button class="control-btn active" title="Mobile View">📱</button>
+                    <button class="control-btn" title="Tablet View">💻</button>
+                    <button class="control-btn" title="Desktop View">🖥️</button>
+                </div>
+            </div>
+
+            <div class="device-frame">
+                <div class="building-state" id="buildingState">
+                    <div class="spinner"></div>
+                    <div style="margin-top: 1rem; text-align: left;">
+                        <div class="step-item done"><span class="check">✓</span> Planning database schema</div>
+                        <div class="step-item active"><span class="check">➜</span> Generating UI components</div>
+                        <div class="step-item">Connecting API endpoints</div>
+                        <div class="step-item">Finalizing styles</div>
+                    </div>
+                </div>
+                <!-- This would be replaced by the actual app iframe/view when ready -->
+                <iframe id="appPreview" style="width: 100%; height: 100%; border: none; display: none;"
+                    src="about:blank"></iframe>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const chatInput = document.getElementById('chatInput');
+        const chatArea = document.getElementById('chatArea');
+        const buildingState = document.getElementById('buildingState');
+        const appPreview = document.getElementById('appPreview');
+
+        chatInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            // Add user message
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            // Simulate agent response
+            setTimeout(() => {
+                addMessage("Got it! I'm updating the design now...", 'agent');
+            }, 1000);
+        }
+
+        function addMessage(text, type) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${type}`;
+            msgDiv.innerHTML = `
+                <div class="avatar ${type}">${type === 'agent' ? 'AI' : 'You'}</div>
+                <div class="message-content">${text}</div>
+            `;
+            chatArea.appendChild(msgDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Simulate building process
+        setTimeout(() => {
+            const steps = document.querySelectorAll('.step-item');
+            steps[1].classList.add('done');
+            steps[1].classList.remove('active');
+            steps[1].querySelector('.check').textContent = '✓';
+
+            steps[2].classList.add('active');
+            steps[2].querySelector('.check').textContent = '➜';
+        }, 2000);
+
+        setTimeout(() => {
+            // Show "app" after a few seconds
+            buildingState.style.display = 'none';
+            appPreview.style.display = 'block';
+
+            // Inject a simple mock app into the iframe
+            const doc = appPreview.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <style>
+                    body { font-family: sans-serif; padding: 20px; background: #fafafa; }
+                    .card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+                    h2 { margin-top: 0; font-size: 18px; }
+                    button { background: #1a1a1a; color: white; border: none; padding: 10px 20px; border-radius: 8px; width: 100%; font-weight: bold; }
+                </style>
+                <h1 style="text-align: center; margin-bottom: 20px;">Fade & Cut</h1>
+                <div class="card">
+                    <h2>Classic Cut</h2>
+                    <p>$30 • 30 mins</p>
+                    <button>Book Now</button>
+                </div>
+                <div class="card">
+                    <h2>Beard Trim</h2>
+                    <p>$15 • 15 mins</p>
+                    <button>Book Now</button>
+                </div>
+            `);
+            doc.close();
+        }, 4500);
+    </script>
+</body>
+
+</html>

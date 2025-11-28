@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployed - NovaKiwi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .deploy-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(142, 229, 63, 0.1) 0%, rgba(250, 250, 250, 0) 70%);
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .url-card {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .url-text {
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--muted-text);
+            font-weight: 500;
+        }
+
+        .copy-btn:hover {
+            color: var(--text-color);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-color);
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header style="position: absolute; top: 0; width: 100%; background: transparent; border: none;">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-dot"></div>
+                NovaKiwi
+            </a>
+        </div>
+    </header>
+
+    <div class="deploy-container">
+        <div class="success-icon">🎉</div>
+        <h1>Your app is live!</h1>
+        <p style="font-size: 1.2rem; max-width: 500px;">Congratulations! Your barbershop booking app has been
+            successfully deployed to the world.</p>
+
+        <div class="url-card">
+            <span class="url-text">https://fade-and-cut.novakiwi.app</span>
+            <button class="copy-btn" onclick="alert('Copied!')">Copy</button>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <a href="https://fade-and-cut.novakiwi.app" target="_blank" class="btn btn-primary">Open App</a>
+            <a href="workspace.html" class="btn btn-outline">Back to Workspace</a>
+        </div>
+    </div>
+
+    <script>
+        // Simple confetti effect
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = -10 + 'px';
+                confetti.style.backgroundColor = ['#8EE53F', '#1a1a1a', '#ff0055', '#0099ff'][Math.floor(Math.random() * 4)];
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        window.onload = createConfetti;
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Building - NovaKiwi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .onboarding-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .input-area {
+            width: 100%;
+            max-width: 700px;
+            margin-top: 3rem;
+        }
+
+        .idea-input {
+            width: 100%;
+            padding: 1.5rem;
+            font-size: 1.2rem;
+            font-family: var(--font-family);
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            resize: none;
+            min-height: 150px;
+            transition: all 0.2s ease;
+            background: white;
+            outline: none;
+        }
+
+        .idea-input:focus {
+            border-color: var(--text-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .examples {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .example-chip {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            color: var(--muted-text);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .example-chip:hover {
+            border-color: var(--text-color);
+            color: var(--text-color);
+        }
+    </style>
+</head>
+
+<body>
+    <header style="position: absolute; background: transparent; border: none;">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-dot"></div>
+                NovaKiwi
+            </a>
+        </div>
+    </header>
+
+    <div class="onboarding-container">
+        <h1 style="max-width: 800px;">What do you want to build?</h1>
+        <p style="font-size: 1.2rem; margin-top: 1rem;">Describe your idea in plain English. We'll handle the rest.</p>
+
+        <div class="input-area">
+            <textarea class="idea-input"
+                placeholder="e.g. I want a booking app for my barbershop where customers can choose a barber and a time slot..."></textarea>
+
+            <div class="examples">
+                <div class="example-chip"
+                    onclick="fillInput('I want a habit tracker with daily reminders and progress charts')">Habit tracker
+                </div>
+                <div class="example-chip"
+                    onclick="fillInput('Build a marketplace for local artists to sell their paintings')">Art marketplace
+                </div>
+                <div class="example-chip" onclick="fillInput('A simple recipe book app that generates shopping lists')">
+                    Recipe book</div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <a href="workspace.html" class="btn btn-primary"
+                    style="font-size: 1.1rem; padding: 16px 32px; width: 100%; max-width: 300px;">Start Building
+                    &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function fillInput(text) {
+            document.querySelector('.idea-input').value = text;
+            document.querySelector('.idea-input').focus();
+        }
+    </script>
+</body>
+
+</html>
